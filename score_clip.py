@@ -32,18 +32,22 @@ def score_clip(clip, token):
         "Reply ONLY JSON: {\"score\": <0-10 int>, \"reason\": <one short phrase>}"
     )
     content = [{"type": "text", "text": prompt}]
-    r = requests.post(NOUS_URL, headers={"Authorization": f"Bearer {token}"},
-                      json={"model": "tencent/hy3:free", "messages": [
-                          {"role": "user", "content": content}], "max_tokens": 400}, timeout=40)
-    try:
-        msg = r.json()["choices"][0]["message"]
-        txt = msg.get("content") or msg.get("reasoning") or ""
-        import re
-        m = re.search(r"\{.*\}", txt, re.DOTALL)
-        obj = json.loads(m.group(0)) if m else {}
-        return float(obj.get("score", 0)), obj.get("reason", "")
-    except Exception:
-        return 0.0, "parse_fail"
+    last_err = "parse_fail"
+    for attempt in range(3):
+        r = requests.post(NOUS_URL, headers={"Authorization": f"Bearer {token}"},
+                          json={"model": "tencent/hy3:free", "messages": [
+                              {"role": "user", "content": content}], "max_tokens": 800}, timeout=40)
+        try:
+            msg = r.json()["choices"][0]["message"]
+            txt = msg.get("content") or msg.get("reasoning") or ""
+            import re
+            m = re.search(r"\{.*\}", txt, re.DOTALL)
+            if m:
+                obj = json.loads(m.group(0))
+                return float(obj.get("score", 0)), obj.get("reason", "")
+        except Exception as e:
+            last_err = f"parse_fail:{e}"
+    return 0.0, last_err
 
 if __name__ == "__main__":
     clip = sys.argv[1]
