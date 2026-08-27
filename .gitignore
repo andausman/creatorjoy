@@ -1,0 +1,8 @@
+assets/corpus/
+runs/
+__pycache__/
+*.jpg
+
+__pycache__/
+runs/
+assets/
