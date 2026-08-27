@@ -21,12 +21,12 @@ def assemble_reel(scored, out_reel, max_clips=5):
     os.remove(listf)
     return out_reel if os.path.exists(out_reel) else None
 
-def run(video, token, workdir=None):
+def run(video, workdir=None):
     workdir = workdir or tempfile.mkdtemp()
     clips = extract_samples(video, os.path.join(workdir, "samples"))
     scored = []
     for c in clips:
-        s, reason = score_clip(c, token)
+        s, reason = score_clip(c)
         scored.append((c, s, reason))
     scored.sort(key=lambda x: -x[1])
     reel = assemble_reel(scored, os.path.join(workdir, "highlight_reel.mp4"))
@@ -45,7 +45,6 @@ def run(video, token, workdir=None):
 
 if __name__ == "__main__":
     video = sys.argv[1]
-    token = os.environ.get("NOUS_TOKEN", "")
     out = sys.argv[2] if len(sys.argv) > 2 else "output"
-    res = run(video, token, out)
+    res = run(video, out)
     print(json.dumps(res, indent=2))

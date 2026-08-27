@@ -3,7 +3,6 @@
 import os, sys, json, subprocess
 from creatorjoy import run
 
-TOKEN = os.environ.get("NOUS_TOKEN", "")
 CORPUS = "assets/corpus"
 OUT = "runs"
 os.makedirs(OUT, exist_ok=True)
@@ -16,7 +15,7 @@ for vid in sorted(os.listdir(CORPUS)):
     work = os.path.join(OUT, vid.replace(".mp4", ""))
     os.makedirs(work, exist_ok=True)
     try:
-        res = run(path, TOKEN, work)
+        res = run(path, work)
         results.append(res)
         print(f"{vid}: {res['clip_count']} clips, reel={'yes' if res.get('reel') else 'no'}")
     except Exception as e:

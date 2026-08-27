@@ -7,7 +7,6 @@ confirms the reel exists. Used to record the 3-minute demo.
 import os, sys, json, subprocess
 from creatorjoy import run
 
-TOKEN = os.environ.get("NOUS_TOKEN", "")
 CORPUS = "assets/corpus"
 
 def main():
@@ -17,7 +16,7 @@ def main():
     vid = vids[0]
     path = os.path.join(CORPUS, vid)
     print(f"=== CreatorJoy demo on {vid} ===")
-    res = run(path, TOKEN, "demo_run")
+    res = run(path, "demo_run")
     print(f"Input: {vid}")
     print(f"Clips produced: {res['clip_count']}")
     print("Ranked highlights:")

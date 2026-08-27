@@ -11,10 +11,14 @@ Built for TikTok TechJam 2026 — "Build with joy, code for change."
 
 ## Run
 ```bash
-export NOUS_TOKEN="your-nous-token"
+export CJ_LLM_BASE="http://45.85.250.43:8080/v1"
+export CJ_LLM_MODEL="qwen"
 python3 creatorjoy.py input.mp4 output_dir
 ```
 Output: `output_dir/highlight_reel.mp4` plus a JSON of ranked clips.
+
+## LLM backend
+CreatorJoy scores clips with our own self-hosted **Qwen** (OSS), served as an OpenAI-compatible API. No cloud, no external API keys. See `.env.example`.
 
 ## Batch over a folder
 ```bash
@@ -23,7 +27,7 @@ python3 run_corpus.py
 
 ## Files
 - `extract_samples.py` — ffmpeg clip slicing
-- `score_clip.py` — LLM highlight scoring (Nous `tencent/hy3:free`)
+- `score_clip.py` — LLM highlight scoring (self-hosted OSS Qwen)
 - `creatorjoy.py` — orchestration + reel assembly
 - `run_corpus.py` — batch runner
 
